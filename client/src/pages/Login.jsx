@@ -14,7 +14,7 @@ const Login = () => {
     e.preventDefault();
     const endpoint = isSignup ? 'register' : 'login';
     try {
-      const res = await axios.post(`http://localhost:5000/api/auth/${endpoint}`, { ...formData, role });
+      const res = await axios.post(`https://barber-customer.onrender.com/api/auth/${endpoint}`, { ...formData, role });
       alert(res.data.message);
       
       if (!isSignup) {

@@ -6,7 +6,7 @@ export default defineConfig({
   server: {
     port: 5173,
     proxy: {
-      '/api': 'http://localhost:5000' // This connects your frontend to your backend
+      '/api': 'https://barber-customer.onrender.com' // This connects your frontend to your backend
     }
   }
 })

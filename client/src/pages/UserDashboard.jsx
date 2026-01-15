@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io("http://localhost:5000");
+const socket = io("https://barber-customer.onrender.com");
 
 export default function UserDashboard() {
   const [bookings, setBookings] = useState([]);
@@ -21,7 +21,7 @@ export default function UserDashboard() {
   // --- DATA FETCHING ---
   const fetchList = async () => {
     try {
-      const res = await axios.get("http://localhost:5000/api/bookings");
+      const res = await axios.get("https://barber-customer.onrender.com/api/bookings");
       setBookings(res.data);
     } catch (err) {
       console.error(err);
@@ -31,7 +31,7 @@ export default function UserDashboard() {
   const fetchChat = async () => {
     if(!userId) return;
     try {
-      const res = await axios.get(`http://localhost:5000/api/messages/${userId}`);
+      const res = await axios.get(`https://barber-customer.onrender.com/api/messages/${userId}`);
       setMessages(res.data);
     } catch (err) {
       console.error(err);
@@ -72,7 +72,7 @@ export default function UserDashboard() {
     const alreadyBooked = bookings.some(b => b.customerName === userName && b.status !== 'completed');
     if (alreadyBooked) return alert("You are already in queue!");
 
-    await axios.post("http://localhost:5000/api/bookings", { customerName: userName, service });
+    await axios.post("https://barber-customer.onrender.com/api/bookings", { customerName: userName, service });
     socket.emit("new_booking");
     alert("Appointment Booked!");
   };
@@ -80,7 +80,7 @@ export default function UserDashboard() {
   const handleCancel = async (id) => {
     if (window.confirm("Cancel your appointment?")) {
       try {
-        await axios.delete(`http://localhost:5000/api/bookings/${id}`);
+        await axios.delete(`https://barber-customer.onrender.com/api/bookings/${id}`);
         socket.emit("new_booking");
       } catch (err) {
         alert("Error cancelling.");
@@ -104,7 +104,7 @@ export default function UserDashboard() {
     socket.emit("send_message", messageData);
     
     // 2. Save to DB
-    await axios.post("http://localhost:5000/api/messages", messageData);
+    await axios.post("https://barber-customer.onrender.com/api/messages", messageData);
 
     setNewMessage(""); // Clear input
   };

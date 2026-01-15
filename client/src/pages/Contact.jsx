@@ -3,7 +3,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 
 // Socket connect karo taaki Barber ko turant pata chale
-const socket = io("http://localhost:5000");
+const socket = io("https://barber-customer.onrender.com");
 
 const Contact = () => {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -32,7 +32,7 @@ const Contact = () => {
 
     try {
       // 1. Database me save karo
-      await axios.post("http://localhost:5000/api/messages", msgData);
+      await axios.post("https://barber-customer.onrender.com/api/messages", msgData);
       
       // 2. Barber ko Live Notification bhejo
       socket.emit("send_message", msgData);

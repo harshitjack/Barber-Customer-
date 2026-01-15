@@ -3,7 +3,7 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import { useNavigate } from 'react-router-dom';
 
-const socket = io("http://localhost:5000");
+const socket = io("https://barber-customer.onrender.com");
 
 export default function BarberDashboard() {
   const [view, setView] = useState('queue'); // 'queue' or 'chat'
@@ -26,11 +26,11 @@ export default function BarberDashboard() {
   // Initial Data Load
   const fetchData = async () => {
     // 1. Queue Fetch
-    const resBookings = await axios.get("http://localhost:5000/api/bookings");
+    const resBookings = await axios.get("https://barber-customer.onrender.com/api/bookings");
     setBookings(resBookings.data);
 
     // 2. Chat Users Fetch (Jinhone message kiya hai)
-    const resMessages = await axios.get("http://localhost:5000/api/messages/list/users");
+    const resMessages = await axios.get("https://barber-customer.onrender.com/api/messages/list/users");
     // Filter Unique Users manually for now
     const uniqueUsers = [];
     const map = new Map();
@@ -67,7 +67,7 @@ export default function BarberDashboard() {
     // Join that user's room to talk
     socket.emit("join_chat", user.id);
     // Fetch old messages
-    const res = await axios.get(`http://localhost:5000/api/messages/${user.id}`);
+    const res = await axios.get(`https://barber-customer.onrender.com/api/messages/${user.id}`);
     setChatHistory(res.data);
   };
 
@@ -83,15 +83,15 @@ export default function BarberDashboard() {
     };
     
     await socket.emit("send_message", msgData);
-    await axios.post("http://localhost:5000/api/messages", msgData);
+    await axios.post("https://barber-customer.onrender.com/api/messages", msgData);
     setReply("");
   };
 
   // Action Buttons
   const updateStatus = async (id, status) => {
     if (status === 'deleted' && !window.confirm("Delete?")) return;
-    if (status === 'deleted') await axios.delete(`http://localhost:5000/api/bookings/${id}`);
-    else await axios.put(`http://localhost:5000/api/bookings/${id}`, { status });
+    if (status === 'deleted') await axios.delete(`https://barber-customer.onrender.com/api/bookings/${id}`);
+    else await axios.put(`https://barber-customer.onrender.com/api/bookings/${id}`, { status });
     socket.emit("new_booking");
   };
 

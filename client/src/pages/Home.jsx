@@ -2,7 +2,7 @@ import { useState } from 'react';
 import axios from 'axios';
 import io from 'socket.io-client';
 
-const socket = io("http://localhost:5000");
+const socket = io("https://barber-customer.onrender.com");
 
 export default function Home() {
     const [name, setName] = useState('');
@@ -11,7 +11,7 @@ export default function Home() {
     const handleBooking = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:5000/api/bookings", { customerName: name, service });
+            await axios.post("https://barber-customer.onrender.com/api/bookings", { customerName: name, service });
             
             // This is the "Fix": It tells the server a change happened
             socket.emit("new_booking"); 

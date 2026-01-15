@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const http = require('http');
+const path = require('path');
 const { Server } = require('socket.io');
 
 const authRoutes = require('./routes/authRoutes');
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/messages', messageRoutes);
-
+app.use(express.static(path.join(__dirname, '../public')));
 mongoose.connect("mongodb+srv://stupidguysboys:ao2EVdes3WRHG0ih@cluster0.ui0lj54.mongodb.net/barber")
     .then(() => console.log("✅ Database Connected"))
     .catch(err => console.log("❌ DB Error", err));
@@ -45,6 +46,11 @@ io.on("connection", (socket) => {
         // Step B: IMPORTANT! Sabko batao ki naya data aaya hai (Taaki Barber ki List update ho jaye)
         io.emit("refresh_data"); 
     });
+   
 });
+
+ app.get('*name', (req, res) => {
+        res.sendFile(path.join(__dirname, '../public/index.html'));
+    });
 
 server.listen(5000, () => console.log("🚀 Server Started on 5000"));
