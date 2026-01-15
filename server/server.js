@@ -7,24 +7,32 @@ const { Server } = require('socket.io');
 
 const authRoutes = require('./routes/authRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
-const messageRoutes = require('./routes/message.Routes');
+const messageRoutes = require('./routes/messageRoutes'); // Ensure filename matches exactly
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { cors: { origin: "*" } });
 
+// --- MIDDLEWARES ---
 app.use(cors());
 app.use(express.json());
 
+// --- API ROUTES ---
 app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/messages', messageRoutes);
-app.use(express.static(path.join(__dirname, '../public')));
+
+// --- STATIC FILES (THE FIX) ---
+// We must serve 'client/dist' because that is where Vite builds the app
+const buildPath = path.join(__dirname, '../client/dist');
+app.use(express.static(buildPath));
+
+// --- DATABASE ---
 mongoose.connect("mongodb+srv://stupidguysboys:ao2EVdes3WRHG0ih@cluster0.ui0lj54.mongodb.net/barber")
     .then(() => console.log("✅ Database Connected"))
     .catch(err => console.log("❌ DB Error", err));
 
-// --- SOCKET LOGIC (Yahan Change Hai) ---
+// --- SOCKET LOGIC ---
 io.on("connection", (socket) => {
     
     // 1. Join Chat Room
@@ -38,19 +46,18 @@ io.on("connection", (socket) => {
         io.emit("refresh_data"); 
     });
 
-    // 3. Send Message (FIXED HERE)
+    // 3. Send Message
     socket.on("send_message", (data) => {
-        // Step A: Sirf us chat room walo ko message bhejo (Live Chat ke liye)
         io.to(data.room).emit("receive_message", data);
-
-        // Step B: IMPORTANT! Sabko batao ki naya data aaya hai (Taaki Barber ki List update ho jaye)
         io.emit("refresh_data"); 
     });
-   
-});
 
- app.get('*name', (req, res) => {
-        res.sendFile(path.join(__dirname, '../public/index.html'));
-    });
+}); // <--- SOCKET BLOCK ENDS HERE (Do not put app.get inside here!)
+
+// --- CATCH-ALL ROUTE (MUST BE OUTSIDE socket logic) ---
+// This handles any page reload on the frontend
+app.get('*', (req, res) => {
+    res.sendFile(path.join(buildPath, 'index.html'));
+});
 
 server.listen(5000, () => console.log("🚀 Server Started on 5000"));
