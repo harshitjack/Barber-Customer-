@@ -7,7 +7,8 @@ const { Server } = require('socket.io');
 
 const authRoutes = require('./routes/authRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
-const messageRoutes = require('./routes/messageRoutes'); // Ensure filename matches exactly
+// FIX 1: Ensure you renamed the file to 'messageRoutes.js' inside /routes folder!
+const messageRoutes = require('./routes/messageRoutes'); 
 
 const app = express();
 const server = http.createServer(app);
@@ -22,8 +23,8 @@ app.use('/api/auth', authRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/messages', messageRoutes);
 
-// --- STATIC FILES (THE FIX) ---
-// We must serve 'client/dist' because that is where Vite builds the app
+// --- STATIC FILES (FIX 2) ---
+// We serve 'client/dist' because that is where Vite creates the build
 const buildPath = path.join(__dirname, '../client/dist');
 app.use(express.static(buildPath));
 
@@ -52,10 +53,9 @@ io.on("connection", (socket) => {
         io.emit("refresh_data"); 
     });
 
-}); // <--- SOCKET BLOCK ENDS HERE (Do not put app.get inside here!)
+}); // <--- SOCKET BLOCK ENDS HERE (FIX 3)
 
-// --- CATCH-ALL ROUTE (MUST BE OUTSIDE socket logic) ---
-// This handles any page reload on the frontend
+// --- CATCH-ALL ROUTE (Must be OUTSIDE socket logic) ---
 app.get('*', (req, res) => {
     res.sendFile(path.join(buildPath, 'index.html'));
 });
