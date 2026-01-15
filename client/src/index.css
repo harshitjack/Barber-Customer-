@@ -1,0 +1,74 @@
+:root {
+  --gold: #d4af37;
+  --dark: #121212;
+  --card: #1e1e1e;
+  --text: #ffffff;
+}
+
+body {
+  margin: 0;
+  background-color: var(--dark);
+  color: var(--text);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Card Style */
+.card {
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+  border: 1px solid #333;
+  transition: transform 0.3s;
+}
+
+.card:hover { transform: translateY(-3px); border-color: var(--gold); }
+
+/* Buttons */
+.btn-gold {
+  background: var(--gold);
+  color: #000;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 10px;
+}
+
+.btn-red { background: #e74c3c; color: white; padding: 5px 15px; border: none; border-radius: 4px; cursor: pointer; }
+.btn-green { background: #2ecc71; color: white; padding: 5px 15px; border: none; border-radius: 4px; cursor: pointer; margin-right: 5px;}
+
+/* Inputs */
+input, select {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
+
+/* Navigation */
+nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: #000;
+  border-bottom: 1px solid var(--gold);
+}
+.nav-links a { color: white; text-decoration: none; margin-left: 20px; font-weight: 500; transition: color 0.3s;}
+.nav-links a:hover { color: var(--gold); }
+
+/* Responsive Grid */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
